@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Meal Recommender</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles.css') }}"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <div class="left">
+        <h1>🥗 Meal Recommendation System</h1>
+
+        {% if recommendation %}
+        <div class="result">
+          <h2>Recommended Meal: <span>{{ recommendation }}</span></h2>
+        </div>
+        {% endif %}
+      </div>
+
+      <div class="right">
+        <div class="card">
+          <form method="POST">
+            <label for="dietary">Select Dietary Preference:</label>
+            <select name="dietary" id="dietary" required>
+              {% for pref in preferences %}
+              <option value="{{ pref }}">{{ pref }}</option>
+              {% endfor %}
+            </select>
+
+            <label for="energy">Select Energy Category:</label>
+            <select name="energy" id="energy" required>
+              {% for energy in energies %}
+              <option value="{{ energy }}">{{ energy }}</option>
+              {% endfor %}
+            </select>
+
+            <button type="submit">🍽️ Get Recommendation</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- 🆕 ADD HISTORY SECTION HERE -->
+    {% if past_choices %}
+    <div class="history">
+      <h2>📋 Past Recommendations</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Dietary Preference</th>
+            <th>Recommended Meal</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for choice in past_choices %}
+          <tr>
+            <td>{{ choice.dietary_preference }}</td>
+            <td>{{ choice.previous_choice }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% endif %}
+  </body>
+</html>
