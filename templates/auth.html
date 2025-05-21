@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
+    <title>Auth</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: url("https://images.unsplash.com/photo-1506744038136-46273834b3fb")
+          no-repeat center center fixed;
+        background-size: cover;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+      }
+
+      .container {
+        background-color: white;
+        width: 800px;
+        display: flex;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      }
+
+      .left-box {
+        flex: 1;
+        background: url("https://images.unsplash.com/photo-1536305030015-4d61aa56f46a")
+          center/cover no-repeat;
+        color: rgb(19, 10, 10);
+        padding: 40px 30px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      .left-box h2 {
+        font-size: 30px;
+        margin-bottom: 10px;
+      }
+
+      .left-box p {
+        font-size: 16px;
+      }
+
+      .right-box {
+        flex: 1;
+        padding: 40px 30px;
+      }
+
+      .tabs {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 20px;
+      }
+
+      .tabs button {
+        flex: 1;
+        padding: 10px;
+        background-color: #f0f0f0;
+        border: none;
+        cursor: pointer;
+        font-weight: bold;
+      }
+
+      .tabs button.active {
+        background-color: #00bcd4;
+        color: white;
+      }
+
+      .form-container {
+        display: none;
+      }
+
+      .form-container.active {
+        display: block;
+      }
+
+      form label {
+        display: block;
+        margin-top: 10px;
+      }
+
+      form input {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+
+      form button {
+        margin-top: 20px;
+        padding: 10px;
+        width: 100%;
+        background-color: #00bcd4;
+        border: none;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+        border-radius: 5px;
+      }
+
+      .form-footer {
+        text-align: center;
+        margin-top: 10px;
+      }
+
+      .form-footer a {
+        color: #00bcd4;
+        text-decoration: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="left-box">
+        <h1>🥗 Meal Recommendation System</h1>
+        <p>
+          Please log in using your personal information to stay connected with
+          us.
+        </p>
+      </div>
+      <div class="right-box">
+        {% with messages = get_flashed_messages() %} {% if messages %}
+        <div
+          id="flash-message"
+          style="
+            padding: 10px;
+            margin-bottom: 15px;
+            background-color: #e0f7fa;
+            color: #006064;
+            border-left: 5px solid #00bcd4;
+          "
+        >
+          {{ messages[0] }}
+        </div>
+        {% endif %} {% endwith %}
+        <div class="tabs">
+          <button class="tab-btn active" onclick="showForm('login')">
+            Login
+          </button>
+          <button class="tab-btn" onclick="showForm('register')">
+            Register
+          </button>
+        </div>
+
+        <!-- Login Form -->
+        <div id="login" class="form-container active">
+          <form method="POST" action="/auth">
+            <input type="hidden" name="action" value="login" />
+            <label for="username">Username</label>
+            <input type="text" name="username" required />
+
+            <label for="password">Password</label>
+            <input type="password" name="password" required />
+
+            <button type="submit">Log In</button>
+            <div class="form-footer">
+              <a href="#">Forgot password?</a>
+            </div>
+          </form>
+        </div>
+
+        <!-- Register Form -->
+        <div id="register" class="form-container">
+          <form method="POST" action="/auth">
+            <input type="hidden" name="action" value="register" />
+            <label for="username">Username</label>
+            <input type="text" name="username" required />
+
+            <label for="password">Password</label>
+            <input type="password" name="password" required />
+
+            <button type="submit">Register</button>
+            <div class="form-footer">
+              Already have an account?
+              <a href="#" onclick="showForm('login')">Login</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function showForm(formId) {
+        document
+          .querySelectorAll(".form-container")
+          .forEach((form) => form.classList.remove("active"));
+        document
+          .querySelectorAll(".tab-btn")
+          .forEach((btn) => btn.classList.remove("active"));
+        document.getElementById(formId).classList.add("active");
+        document
+          .querySelector(`.tab-btn[onclick="showForm('${formId}')"]`)
+          .classList.add("active");
+      }
+
+      setTimeout(() => {
+        const msg = document.getElementById("flash-message");
+        if (msg) msg.style.display = "none";
+      }, 4000); // 4 seconds
+    </script>
+  </body>
+</html>
